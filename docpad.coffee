@@ -12,7 +12,7 @@ docpadConfig = {
 		# Specify some site properties
 		site:
 			# The production url of our website
-			url: "http://website.com"
+			url: "http://www.sultalus.fr"
 
 			# Here are some old site urls that you would like to redirect from
 			oldUrls: [
@@ -21,16 +21,18 @@ docpadConfig = {
 			]
 
 			# The default title of our website
-			title: "Your Website"
+			title: "Sultalus.fr"
 
 			# The website description (for SEO)
 			description: """
-				When your website appears in search results in say Google, the text here will be shown underneath your website's title.
+        Site de la team Sultalus (Sur le talus, mais en bourguignon!) contenant photos, vidéos, récit de nos parties de pêche!
+        Vous trouverez également des informations sur nos techniques et sur nos lieux de pêche.
+        Et tous sa avec bonne humeur et parfois même de bonne crise de fous rire!"
 				"""
 
 			# The website keywords (for SEO) separated by commas
 			keywords: """
-				place, your, website, keywoards, here, keep, them, related, to, the, content, of, your, website
+        sur le talus, sultalus, pêche, truite, jura, carnassier, brochet, sandre, la sorme
 				"""
 
 
@@ -43,7 +45,7 @@ docpadConfig = {
 		getPreparedTitle: ->
 			# if we have a document title, then we should use that and suffix the site's title onto it
 			if @document.title
-				"#{@document.title} | #{@site.title}"
+				"#{@document.title}"
 			# if our document does not have it's own title, then we should just use the site's title
 			else
 				@site.title
