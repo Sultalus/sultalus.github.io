@@ -45,7 +45,8 @@
     "bal-util": "~1.15.3",
     "underscore": "~1.4.3",
     "docpad-plugin-ghpages": "~2.4.0",
-    "docpad-plugin-grunt": "~2.0.5"
+    "docpad-plugin-grunt": "~2.0.5",
+    "docpad-plugin-geturl": "~2.1.1"
   },
   "devDependencies": {
     "docpad-plugin-livereload": "2.x"
