@@ -2,6 +2,8 @@
 # It is simply a CoffeeScript Object which is parsed by CSON
 docpadConfig = {
 
+  localeCode: 'fr'
+
 	# =================================
 	# Template Data
 	# These are variables that will be accessible via our templates
@@ -122,7 +124,7 @@ docpadConfig = {
 
 			# Make sure to register a grunt `default` task
 			command = ["#{rootPath}/node_modules/.bin/grunt", 'default']
-			
+
 			# Execute
 			balUtil.spawn command, {cwd:rootPath,output:true}, ->
 				src = []
@@ -136,6 +138,13 @@ docpadConfig = {
 
 			# Chain
 			@
+
+  environments:
+    development:
+      templateData:
+        site:
+          url: 'http://localhost:9778'
+
 }
 
 # Export our DocPad Configuration
