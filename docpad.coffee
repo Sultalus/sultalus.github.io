@@ -14,7 +14,7 @@ docpadConfig = {
 		# Specify some site properties
 		site:
 			# The production url of our website
-			url: "http://www.sultalus.fr"
+			url: "http://sultalus.github.io/web-site"
 
 			# Here are some old site urls that you would like to redirect from
 			oldUrls: [
