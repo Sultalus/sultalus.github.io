@@ -4,146 +4,151 @@ docpadConfig = {
 
   localeCode: 'fr'
 
-	# =================================
-	# Template Data
-	# These are variables that will be accessible via our templates
-	# To access one of these within our templates, refer to the FAQ: https://github.com/bevry/docpad/wiki/FAQ
+# =================================
+# Template Data
+# These are variables that will be accessible via our templates
+# To access one of these within our templates, refer to the FAQ: https://github.com/bevry/docpad/wiki/FAQ
 
-	templateData:
+  templateData:
+  # Specify some site properties
+    site:
+    # The production url of our website
+      url: "http://sultalus.github.io/web-site"
 
-		# Specify some site properties
-		site:
-			# The production url of our website
-			url: "http://sultalus.github.io/web-site"
+    # Here are some old site urls that you would like to redirect from
+      oldUrls: [
+        'www.website.com',
+        'website.herokuapp.com'
+      ]
 
-			# Here are some old site urls that you would like to redirect from
-			oldUrls: [
-				'www.website.com',
-				'website.herokuapp.com'
-			]
+    # The default title of our website
+      title: "Sultalus.fr"
 
-			# The default title of our website
-			title: "Sultalus.fr"
+    # The website description (for SEO)
+      description: """
+                   Site de la team Sultalus (Sur le talus, mais en bourguignon!) contenant photos, vidéos, récit de nos parties de pêche!
+                   Vous trouverez également des informations sur nos techniques et sur nos lieux de pêche.
+                   Et tous sa avec bonne humeur et parfois même de bonne crise de fous rire!"
+                   """
 
-			# The website description (for SEO)
-			description: """
-        Site de la team Sultalus (Sur le talus, mais en bourguignon!) contenant photos, vidéos, récit de nos parties de pêche!
-        Vous trouverez également des informations sur nos techniques et sur nos lieux de pêche.
-        Et tous sa avec bonne humeur et parfois même de bonne crise de fous rire!"
-				"""
-
-			# The website keywords (for SEO) separated by commas
-			keywords: """
-        sur le talus, sultalus, pêche, truite, jura, carnassier, brochet, sandre, la sorme
-				"""
-
-
-		# -----------------------------
-		# Helper Functions
-
-		# Get the prepared site/document title
-		# Often we would like to specify particular formatting to our page's title
-		# we can apply that formatting here
-		getPreparedTitle: ->
-			# if we have a document title, then we should use that and suffix the site's title onto it
-			if @document.title
-				"#{@document.title}"
-			# if our document does not have it's own title, then we should just use the site's title
-			else
-				@site.title
-
-		# Get the prepared site/document description
-		getPreparedDescription: ->
-			# if we have a document description, then we should use that, otherwise use the site's description
-			@document.description or @site.description
-
-		# Get the prepared site/document keywords
-		getPreparedKeywords: ->
-			# Merge the document keywords with the site keywords
-			@site.keywords.concat(@document.keywords or []).join(', ')
-
-		getGruntedStyles: ->
-			_ = require 'underscore'
-			styles = []
-			gruntConfig = require('./grunt-config.json')
-			_.each gruntConfig, (value, key) ->
-				styles = styles.concat _.flatten _.pluck value, 'dest'
-			styles = _.filter styles, (value) ->
-				return value.indexOf('.min.css') > -1
-			_.map styles, (value) ->
-				return value.replace 'out', ''
-
-		getGruntedScripts: ->
-			_ = require 'underscore'
-			scripts = []
-			gruntConfig = require('./grunt-config.json')
-			_.each gruntConfig, (value, key) ->
-				scripts = scripts.concat _.flatten _.pluck value, 'dest'
-			scripts = _.filter scripts, (value) ->
-				return value.indexOf('.min.js') > -1
-			_.map scripts, (value) ->
-				return value.replace 'out', ''
+    # The website keywords (for SEO) separated by commas
+      keywords: """
+                sur le talus, sultalus, pêche, truite, jura, carnassier, brochet, sandre, la sorme
+                """
 
 
-	# =================================
-	# DocPad Events
+  # -----------------------------
+  # Helper Functions
 
-	# Here we can define handlers for events that DocPad fires
-	# You can find a full listing of events on the DocPad Wiki
-	events:
+  # Get the prepared site/document title
+  # Often we would like to specify particular formatting to our page's title
+  # we can apply that formatting here
+    getPreparedTitle: ->
+      # if we have a document title, then we should use that and suffix the site's title onto it
+      if @document.title
+        "#{@document.title}"
+        # if our document does not have it's own title, then we should just use the site's title
+      else
+        @site.title
 
-		# Server Extend
-		# Used to add our own custom routes to the server before the docpad routes are added
-		serverExtend: (opts) ->
-			# Extract the server from the options
-			{server} = opts
-			docpad = @docpad
+  # Get the prepared site/document description
+    getPreparedDescription: ->
+      # if we have a document description, then we should use that, otherwise use the site's description
+      @document.description or @site.description
 
-			# As we are now running in an event,
-			# ensure we are using the latest copy of the docpad configuraiton
-			# and fetch our urls from it
-			latestConfig = docpad.getConfig()
-			oldUrls = latestConfig.templateData.site.oldUrls or []
-			newUrl = latestConfig.templateData.site.url
+  # Get the prepared site/document keywords
+    getPreparedKeywords: ->
+      # Merge the document keywords with the site keywords
+      @site.keywords.concat(@document.keywords or []).join(', ')
 
-			# Redirect any requests accessing one of our sites oldUrls to the new site url
-			server.use (req,res,next) ->
-				if req.headers.host in oldUrls
-					res.redirect(newUrl+req.url, 301)
-				else
-					next()
+    getGruntedStyles: ->
+      _ = require 'underscore'
+      styles = []
+      gruntConfig = require('./grunt-config.json')
+      _.each gruntConfig, (value, key) ->
+        styles = styles.concat _.flatten _.pluck value, 'dest'
+      styles = _.filter styles, (value) ->
+        return value.indexOf('.min.css') > -1
+      _.map styles, (value) ->
+        return value.replace 'out', ''
 
-		# Write After
-		# Used to minify our assets with grunt
-		writeAfter: (opts,next) ->
-			# Prepare
-			docpad = @docpad
-			rootPath = docpad.config.rootPath
-			balUtil = require 'bal-util'
-			_ = require 'underscore'
+    getGruntedScripts: ->
+      _ = require 'underscore'
+      scripts = []
+      gruntConfig = require('./grunt-config.json')
+      _.each gruntConfig, (value, key) ->
+        scripts = scripts.concat _.flatten _.pluck value, 'dest'
+      scripts = _.filter scripts, (value) ->
+        return value.indexOf('.min.js') > -1
+      _.map scripts, (value) ->
+        return value.replace 'out', ''
 
-			# Make sure to register a grunt `default` task
-			command = ["#{rootPath}/node_modules/.bin/grunt", 'default']
+  # Plugin Configuration
+  plugins:
+    ghpages:
+      deployRemote: 'origin'
+      deployBranch: 'master'
 
-			# Execute
-			balUtil.spawn command, {cwd:rootPath,output:true}, ->
-				src = []
-				gruntConfig = require './grunt-config.json'
-				_.each gruntConfig, (value, key) ->
-					src = src.concat _.flatten _.pluck value, 'src'
-				_.each src, (value) ->
-					balUtil.spawn ['rm', value], {cwd:rootPath, output:false}, ->
-				balUtil.spawn ['find', '.', '-type', 'd', '-empty', '-exec', 'rmdir', '{}', '\;'], {cwd:rootPath+'/out', output:false}, ->
-				next()
+# =================================
+# DocPad Events
 
-			# Chain
-			@
+# Here we can define handlers for events that DocPad fires
+# You can find a full listing of events on the DocPad Wiki
+  events:
+  # Server Extend
+  # Used to add our own custom routes to the server before the docpad routes are added
+    serverExtend: (opts) ->
+      # Extract the server from the options
+      {server} = opts
+      docpad = @docpad
 
-  environments:
-    development:
-      templateData:
-        site:
-          url: 'http://localhost:9778'
+      # As we are now running in an event,
+      # ensure we are using the latest copy of the docpad configuraiton
+      # and fetch our urls from it
+      latestConfig = docpad.getConfig()
+      oldUrls = latestConfig.templateData.site.oldUrls or []
+      newUrl = latestConfig.templateData.site.url
+
+      # Redirect any requests accessing one of our sites oldUrls to the new site url
+      server.use (req, res, next) ->
+        if req.headers.host in oldUrls
+          res.redirect(newUrl + req.url, 301)
+        else
+          next()
+
+  # Write After
+  # Used to minify our assets with grunt
+    writeAfter: (opts, next) ->
+      # Prepare
+      docpad = @docpad
+      rootPath = docpad.config.rootPath
+      balUtil = require 'bal-util'
+      _ = require 'underscore'
+
+      # Make sure to register a grunt `default` task
+      command = ["#{rootPath}/node_modules/.bin/grunt", 'default']
+
+      # Execute
+      balUtil.spawn command, {cwd: rootPath, output: true}, ->
+        src = []
+        gruntConfig = require './grunt-config.json'
+        _.each gruntConfig, (value, key) ->
+          src = src.concat _.flatten _.pluck value, 'src'
+        _.each src, (value) ->
+          balUtil.spawn ['rm', value], {cwd: rootPath, output: false}, ->
+        balUtil.spawn ['find', '.', '-type', 'd', '-empty', '-exec', 'rmdir', '{}',
+                       '\;'], {cwd: rootPath + '/out', output: false}, ->
+        next()
+
+      # Chain
+      @
+
+
+    environments:
+      development:
+        templateData:
+          site:
+            url: 'http://localhost:9778'
 
 }
 
